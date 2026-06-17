@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Stratum for ALL3D - Interactive Demo</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0f0f1a; color: #e0e0e0; padding: 0; }
+  .header { background: linear-gradient(135deg, #1a1a2e, #2a1e4a); padding: 30px 20px; text-align: center; border-bottom: 1px solid #2a2a3a; }
+  .header h1 { font-size: 26px; color: #e0e0e0; margin-bottom: 6px; }
+  .header h1 span { color: #a78bfa; }
+  .header p { color: #64748b; font-size: 14px; max-width: 600px; margin: 0 auto; }
+  .container { max-width: 900px; margin: 0 auto; padding: 20px; }
+  .demo-pool { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
+  @media (max-width: 700px) { .demo-pool { grid-template-columns: 1fr; } }
+  .vendor-card { background: #16162a; border: 1px solid #2a2a3a; border-radius: 10px; padding: 16px; cursor: pointer; transition: all 0.2s; }
+  .vendor-card:hover { border-color: #a78bfa; background: #1a1a32; }
+  .vendor-card h3 { font-size: 14px; color: #e0e0e0; margin-bottom: 4px; }
+  .vendor-card .meta { font-size: 11px; color: #64748b; margin-bottom: 6px; }
+  .vendor-card .stat { display: inline-block; font-size: 11px; background: #1f1f35; padding: 2px 8px; border-radius: 4px; margin-right: 4px; color: #94a3b8; }
+  .vendor-card .badge { display: inline-block; font-size: 10px; padding: 2px 8px; border-radius: 4px; margin-top: 6px; font-weight: 600; }
+  .badge.cost { background: #2a1a3a; color: #c48bfa; }
+  .badge.quality { background: #1a2a3a; color: #7ac4f0; }
+  .badge.value { background: #1a3a2a; color: #7ad4a0; }
+  .badge.time { background: #3a2a1a; color: #f0c47a; }
+  .badge.price { background: #3a1a1a; color: #f07a7a; }
+  .result-panel { background: #16162a; border: 1px solid #5b4a8a; border-radius: 10px; padding: 20px; margin: 20px 0; display: none; }
+  .result-panel.visible { display: block; }
+  .result-panel .rheader { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+  .result-panel .rheader h2 { font-size: 16px; color: #e0e0e0; }
+  .result-panel .rheader .conf { font-size: 20px; font-weight: 700; color: #a78bfa; }
+  .result-panel .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+  .result-panel .detail-item { background: #1a1a2e; padding: 10px; border-radius: 6px; }
+  .result-panel .detail-item .label { font-size: 10px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; }
+  .result-panel .detail-item .value { font-size: 16px; font-weight: 600; margin-top: 2px; }
+  .message-box { background: #1a1a2e; border: 1px solid #2a2a3a; border-radius: 6px; padding: 12px; margin-top: 10px; font-style: italic; color: #94a3b8; font-size: 13px; line-height: 1.6; }
+  .btn { padding: 8px 20px; border-radius: 6px; border: none; font-size: 13px; cursor: pointer; font-weight: 600; transition: all 0.2s; }
+  .btn-primary { background: #7c4aff; color: white; }
+  .btn-primary:hover { background: #6633cc; }
+  .btn-secondary { background: #2a2a3a; color: #94a3b8; }
+  .btn-secondary:hover { background: #3a3a5a; }
+  .actions { display: flex; gap: 10px; margin: 16px 0; flex-wrap: wrap; }
+  .loading { text-align: center; padding: 40px; color: #64748b; display: none; }
+  .loading .spinner { display: inline-block; width: 30px; height: 30px; border: 3px solid #2a2a3a; border-top-color: #a78bfa; border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 10px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .error-box { background: #3a1a1a; border: 1px solid #f07a7a; border-radius: 8px; padding: 14px; margin: 10px 0; display: none; color: #f07a7a; font-size: 13px; }
+  .endpoint-info { background: #1a1a2e; border-radius: 8px; padding: 14px; margin: 16px 0; }
+  .endpoint-info code { display: block; background: #0f0f1a; padding: 8px; border-radius: 4px; font-size: 11px; color: #a78bfa; margin: 4px 0; word-break: break-all; }
+  .footer { text-align: center; color: #64748b; font-size: 11px; padding: 30px; border-top: 1px solid #1a1a2e; margin-top: 30px; }
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>Stratum for <span>ALL3D</span></h1>
+  <p>Click any Shopify vendor to get a real Stratum analysis — barrier diagnosis, personalized message, and predicted conversion lift. Powered by the Stratum causal engine running live.</p>
+</div>
+<div class="container">
+
+<div class="actions">
+  <button class="btn btn-secondary" id="btn-refresh">Refresh Vendors</button>
+  <button class="btn btn-primary" id="btn-analyze-all">Analyze All</button>
+</div>
+
+<div class="loading" id="loading">
+  <div class="spinner"></div>
+  <div>Stratum engine analyzing...</div>
+</div>
+
+<div class="error-box" id="error-box"></div>
+
+<div class="demo-pool" id="vendor-grid"></div>
+
+<div class="result-panel" id="result-panel">
+  <div class="rheader">
+    <h2 id="result-name">Vendor</h2>
+    <span class="conf" id="result-conf">85%</span>
+  </div>
+  <div class="detail-grid">
+    <div class="detail-item">
+      <div class="label">Barrier</div>
+      <div class="value" id="result-barrier" style="color:#a78bfa">-</div>
+    </div>
+    <div class="detail-item">
+      <div class="label">Predicted Conversion</div>
+      <div class="value" id="result-conv" style="color:#4ade80">-</div>
+    </div>
+    <div class="detail-item">
+      <div class="label">Lift vs Generic</div>
+      <div class="value" id="result-lift" style="color:#facc15">-</div>
+    </div>
+    <div class="detail-item">
+      <div class="label">Time</div>
+      <div class="value" id="result-time" style="color:#94a3b8">-</div>
+    </div>
+  </div>
+  <div class="detail-grid" id="result-factors"></div>
+  <div class="label" style="font-size:11px;color:#64748b;margin:6px 0 2px;text-transform:uppercase;letter-spacing:0.5px;">Personalized Message</div>
+  <div class="message-box" id="result-message">Loading...</div>
+</div>
+
+<div class="endpoint-info">
+  <div style="font-size:12px;font-weight:600;margin-bottom:6px;color:#94a3b8;">API Endpoint</div>
+  <code>POST /gtm/analyze</code>
+  <code id="endpoint-url">https://via-cds-restoration-rely.trycloudflare.com/gtm/analyze</code>
+  <div style="font-size:11px;color:#64748b;margin-top:6px;">Send vendor store data as JSON. Get back a causal diagnosis and personalized message.</div>
+</div>
+
+</div>
+<div class="footer">
+  Powered by Stratum Causal Engine v2.0 | MetaboMaxPro, Inc. | TunedAI Labs | June 2026
+</div>
+
+<script>
+const API_BASE = 'https://via-cds-restoration-rely.trycloudflare.com';
+
+async function fetchVendors() {
+  try {
+    const r = await fetch(`${API_BASE}/gtm/demo-vendors`);
+    const d = await r.json();
+    return d.vendors || [];
+  } catch(e) {
+    showError('Could not connect to Stratum engine: ' + e.message);
+    return [];
+  }
+}
+
+async function analyzeVendor(vendor) {
+  const loading = document.getElementById('loading');
+  loading.style.display = 'block';
+  document.getElementById('result-panel').classList.remove('visible');
+  document.getElementById('error-box').style.display = 'none';
+  
+  try {
+    const r = await fetch(`${API_BASE}/gtm/analyze`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(vendor)
+    });
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    const data = await r.json();
+    showResult(data);
+  } catch(e) {
+    showError('Analysis failed: ' + e.message);
+  } finally {
+    loading.style.display = 'none';
+  }
+}
+
+async function analyzeAll() {
+  const vendors = window._vendors;
+  if (!vendors || vendors.length === 0) return;
+  
+  const loading = document.getElementById('loading');
+  loading.style.display = 'block';
+  loading.querySelector('.spinner').after(document.createTextNode(''));
+  loading.innerHTML = '<div class="spinner"></div><div>Analyzing all vendors...</div>';
+  document.getElementById('error-box').style.display = 'none';
+  
+  let results = [];
+  for (const v of vendors) {
+    try {
+      const r = await fetch(`${API_BASE}/gtm/analyze`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(v)
+      });
+      if (r.ok) {
+        const data = await r.json();
+        results.push(data);
+      }
+    } catch(e) {}
+  }
+  
+  // Show summary
+  if (results.length > 0) {
+    const panel = document.getElementById('result-panel');
+    panel.classList.add('visible');
+    document.getElementById('result-name').textContent = `Analysis of ${results.length} vendors`;
+    document.getElementById('result-conf').textContent = '';
+    document.getElementById('result-barrier').textContent = `${results.filter(r => r.barrier).length} diagnosed`;
+    document.getElementById('result-conv').textContent = `${(results.reduce((s,r) => s + parseFloat(r.predicted_conversion_rate || 0), 0) / results.length).toFixed(1)}% avg`;
+    document.getElementById('result-lift').textContent = `${results.filter(r => r.expected_lift_vs_generic).length} measured`;
+    document.getElementById('result-time').textContent = `Batch complete`;
+    
+    let factorsHTML = '';
+    const barriers = {};
+    results.forEach(r => { if(r.barrier_label) barriers[r.barrier_label] = (barriers[r.barrier_label] || 0) + 1; });
+    factorsHTML += '<div class="detail-item"><div class="label">Barrier Breakdown</div><div class="value" style="font-size:13px">' +
+      Object.entries(barriers).map(([k,v]) => `${k}: ${v}`).join(' | ') + '</div></div>';
+    document.getElementById('result-message').textContent = 'All vendors analyzed. Individual results shown on vendor cards.';
+    document.getElementById('result-factors').innerHTML = factorsHTML;
+  }
+  
+  loading.style.display = 'none';
+}
+
+function showResult(data) {
+  const panel = document.getElementById('result-panel');
+  panel.classList.add('visible');
+  
+  document.getElementById('result-name').textContent = data.vendor || 'Vendor';
+  document.getElementById('result-conf').textContent = `${data.confidence || 0}%`;
+  document.getElementById('result-barrier').textContent = data.barrier_label || data.barrier || 'Unknown';
+  document.getElementById('result-conv').textContent = data.predicted_conversion_rate || `${data.conversion_rate_estimate || 0}%`;
+  document.getElementById('result-lift').textContent = data.expected_lift_vs_generic || data.lift || '-';
+  document.getElementById('result-time').textContent = `${data.elapsed_seconds || 0}s`;
+  
+  let factorsHTML = '';
+  if (data.causal_factors) {
+    data.causal_factors.forEach(f => {
+      factorsHTML += `<div class="detail-item"><div class="label">${f.variable}</div><div class="value" style="font-size:14px;color:#94a3b8">${f.value} (contrib: ${f.contribution})</div></div>`;
+    });
+  }
+  document.getElementById('result-factors').innerHTML = factorsHTML || '<div class="detail-item"><div class="label">Diagnosis</div><div class="value" style="font-size:13px;color:#94a3b8">Based on SKU count, photo quality, AOV, and category benchmarks</div></div>';
+  
+  document.getElementById('result-message').textContent = data.message || 'Personalized message available.';
+}
+
+function showError(msg) {
+  const box = document.getElementById('error-box');
+  box.textContent = msg;
+  box.style.display = 'block';
+}
+
+function renderVendors(vendors) {
+  const grid = document.getElementById('vendor-grid');
+  grid.innerHTML = '';
+  
+  if (!vendors || vendors.length === 0) {
+    grid.innerHTML = '<div style="text-align:center;padding:40px;color:#64748b;grid-column:1/-1">No vendors loaded. Try refreshing.</div>';
+    return;
+  }
+  
+  vendors.forEach(v => {
+    const card = document.createElement('div');
+    card.className = 'vendor-card';
+    card.innerHTML = `
+      <h3>${v.name || v.url || 'Unknown'}</h3>
+      <div class="meta">${v.url || ''}${v.category ? ' - ' + v.category : ''}</div>
+      <div>
+        <span class="stat">${v.sku_count || '?'} SKUs</span>
+        <span class="stat">$${v.aov_estimate || v.price_min || '?'} AOV</span>
+        <span class="stat">${v.photo_quality || '?'} photos</span>
+      </div>
+      <div class="badge ${v.barrier ? v.barrier.replace(/_/g,'') : 'value'}">${v.barrier_label || v.barrier || 'Ready to analyze'}</div>
+    `;
+    card.addEventListener('click', () => analyzeVendor(v));
+    grid.appendChild(card);
+  });
+}
+
+async function init() {
+  // Fix the endpoint URL display
+  document.getElementById('endpoint-url').textContent = `${API_BASE}/gtm/analyze`;
+  
+  const vendors = await fetchVendors();
+  window._vendors = vendors;
+  renderVendors(vendors);
+  
+  document.getElementById('btn-refresh').addEventListener('click', async () => {
+    const v = await fetchVendors();
+    window._vendors = v;
+    renderVendors(v);
+  });
+  
+  document.getElementById('btn-analyze-all').addEventListener('click', analyzeAll);
+}
+
+init();
+</script>
+</body>
+</html>
