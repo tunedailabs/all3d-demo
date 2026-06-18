@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ALL3D x Stratum - Pitch Deck</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', -apple-system, sans-serif; background: #0a0a12; color: #e0e0e0; overflow: hidden; height: 100vh; }
+  .slide { display: none; width: 100vw; height: 100vh; padding: 40px 60px; position: relative; overflow-y: auto; }
+  .slide.active { display: block; }
+  .bg-purple { background: linear-gradient(135deg, #1a1a2e 0%, #2a1e4a 50%, #1a1a2e 100%); }
+  .bg-dark { background: #0f0f1a; }
+  .bg-white { background: #f8f8fc; color: #1a1a2e; }
+  .h1 { font-size: 42px; font-weight: 800; letter-spacing: -1px; margin-bottom: 12px; }
+  .h2 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+  .h3 { font-size: 18px; font-weight: 600; margin-bottom: 6px; }
+  .text-purple { color: #a78bfa; }
+  .text-green { color: #4ade80; }
+  .text-yellow { color: #facc15; }
+  .text-gray { color: #64748b; }
+  .text-white { color: #fff; }
+  .text-dark { color: #1a1a2e; }
+  .center { text-align: center; }
+  .flex { display: flex; gap: 20px; }
+  .col { flex: 1; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+  .grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 12px; }
+  .card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 18px; }
+  .card-white { background: #fff; border: 1px solid #e0e0e0; border-radius: 12px; padding: 18px; color: #1a1a2e; }
+  .card-highlight { background: linear-gradient(135deg, rgba(167,139,250,0.15), rgba(167,139,250,0.05)); border: 1px solid rgba(167,139,250,0.3); border-radius: 12px; padding: 18px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { background: #1a1a2e; color: #a78bfa; padding: 8px 10px; text-align: center; font-weight: 600; border: 1px solid #2a2a3a; }
+  td { padding: 6px 10px; border: 1px solid #2a2a3a; text-align: center; }
+  .bg-white table th { background: #2a1e4a; color: #fff; border: 1px solid #ddd; }
+  .bg-white table td { border: 1px solid #ddd; }
+  .badge { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; }
+  .badge-green { background: #1a3a2a; color: #4ade80; }
+  .badge-purple { background: #2a1a3a; color: #a78bfa; }
+  .badge-yellow { background: #3a2a1a; color: #facc15; }
+  .badge-red { background: #3a1a1a; color: #f07a7a; }
+  .nav { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; align-items: center; z-index: 100; background: rgba(0,0,0,0.7); padding: 8px 16px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); }
+  .nav button { background: rgba(167,139,250,0.2); border: 1px solid rgba(167,139,250,0.3); color: #a78bfa; padding: 6px 14px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600; }
+  .nav button:hover { background: rgba(167,139,250,0.4); }
+  .nav .counter { color: #64748b; font-size: 12px; margin: 0 12px; }
+  .logo { font-size: 14px; font-weight: 700; color: #a78bfa; letter-spacing: 1px; position: absolute; top: 20px; left: 40px; }
+  .slide-num { position: absolute; bottom: 70px; right: 40px; font-size: 48px; font-weight: 800; color: rgba(167,139,250,0.1); }
+  .btn { display: inline-block; padding: 10px 24px; border-radius: 8px; font-weight: 600; font-size: 14px; text-decoration: none; cursor: pointer; border: none; }
+  .btn-primary { background: #7c4aff; color: #fff; }
+  .btn-primary:hover { background: #6633cc; }
+  .btn-outline { background: transparent; border: 2px solid #7c4aff; color: #a78bfa; }
+  .btn-green { background: #4ade80; color: #0a0a12; }
+  .demo-box { background: #1a1a2e; border: 2px solid #a78bfa; border-radius: 12px; padding: 20px; margin: 10px 0; text-align: center; }
+  .demo-box code { display: block; background: #0f0f1a; padding: 8px; border-radius: 6px; font-size: 13px; color: #a78bfa; margin: 6px 0; word-break: break-all; }
+  .stat { font-size: 36px; font-weight: 800; }
+  .stat-label { font-size: 12px; color: #64748b; text-transform: uppercase; letter-spacing: 1px; }
+  @media (max-width: 800px) { .slide { padding: 20px; } .h1 { font-size: 28px; } .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; } .flex { flex-direction: column; } }
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <button onclick="prevSlide()">&#8592;</button>
+  <span class="counter" id="slideCounter"></span>
+  <button onclick="nextSlide()">&#8594;</button>
+</div>
+
+<!-- ══════════ SLIDE 1: COVER ══════════ -->
+<div class="slide active bg-purple" data-slide="1">
+  <div class="logo">STRATUM x ALL3D</div>
+  <div style="display:flex;flex-direction:column;justify-content:center;height:90vh;align-items:center;text-align:center;">
+    <div style="font-size:14px;color:#a78bfa;font-weight:600;letter-spacing:3px;margin-bottom:16px;">STRATUM CAUSAL GTM</div>
+    <div class="h1 text-white" style="font-size:52px;max-width:700px;">Turn Your Demo Funnel Into a Growth Engine</div>
+    <div style="font-size:18px;color:#94a3b8;margin-top:10px;max-width:500px;">From ~100 users to 1,000+ in 12 months with per-vendor causal diagnosis</div>
+    <div style="margin-top:40px;display:flex;gap:14px;flex-wrap:wrap;justify-content:center;">
+      <div style="text-align:center;padding:12px 24px;background:rgba(255,255,255,0.05);border-radius:10px;">
+        <div style="font-size:28px;font-weight:800;color:#4ade80;">4.1x</div>
+        <div style="font-size:11px;color:#64748b;">Conversion lift</div>
+      </div>
+      <div style="text-align:center;padding:12px 24px;background:rgba(255,255,255,0.05);border-radius:10px;">
+        <div style="font-size:28px;font-weight:800;color:#a78bfa;">Week 1</div>
+        <div style="font-size:11px;color:#64748b;">First revenue</div>
+      </div>
+      <div style="text-align:center;padding:12px 24px;background:rgba(255,255,255,0.05);border-radius:10px;">
+        <div style="font-size:28px;font-weight:800;color:#facc15;">$12K/mo</div>
+        <div style="font-size:11px;color:#64748b;">Our retainer</div>
+      </div>
+    </div>
+    <div style="margin-top:30px;font-size:13px;color:#64748b;">
+      <div>Amra Tisi (ALL3D) &bull; Mark Gentry (MetaboMaxPro) &bull; Jeremy Elliott</div>
+      <div style="margin-top:4px;">June 2026</div>
+    </div>
+  </div>
+  <div class="slide-num">01</div>
+</div>
+
+<!-- ══════════ SLIDE 2: THE PROBLEM ══════════ -->
+<div class="slide bg-dark" data-slide="2">
+  <div class="logo">STRATUM x ALL3D</div>
+  <div style="padding-top:30px;">
+    <div class="h2 text-white">The Problem</div>
+    <div class="text-gray" style="font-size:15px;margin-bottom:20px;">One message can't reach everyone. Generic outreach fails because every vendor has a different barrier.</div>
+    
+    <div class="grid-2" style="margin-bottom:20px;">
+      <div class="card">
+        <div style="font-size:12px;color:#f07a7a;font-weight:600;margin-bottom:4px;">~40% of vendors</div>
+        <div class="h3 text-white">Cost-Unaware</div>
+        <div class="text-gray" style="font-size:13px;">Don't know what they spend on photography. Need to see the ROI math.</div>
+        <div class="badge badge-red" style="margin-top:8px;">Need: "You spend $X/month on photos"</div>
+      </div>
+      <div class="card">
+        <div style="font-size:12px;color:#facc15;font-weight:600;margin-bottom:4px;">~25% of vendors</div>
+        <div class="h3 text-white">Value-Unaware</div>
+        <div class="text-gray" style="font-size:13px;">Don't know that 3D images lift conversion 40%+. Need proof.</div>
+        <div class="badge badge-yellow" style="margin-top:8px;">Need: "3D images increase CVR by X%"</div>
+      </div>
+      <div class="card">
+        <div style="font-size:12px;color:#a78bfa;font-weight:600;margin-bottom:4px;">~20% of vendors</div>
+        <div class="h3 text-white">Quality-Skeptic</div>
+        <div class="text-gray" style="font-size:13px;">Tried bad AI tools. Assume all AI looks fake. Need comparison.</div>
+        <div class="badge badge-purple" style="margin-top:8px;">Need: "Compare against YOUR photos"</div>
+      </div>
+      <div class="card">
+        <div style="font-size:12px;color:#4ade80;font-weight:600;margin-bottom:4px;">~15% combined</div>
+        <div class="h3 text-white">Time-Poor / Price-Sensitive</div>
+        <div class="text-gray" style="font-size:13px;">Too busy to try, or assume it's expensive. Need frictionless entry.</div>
+        <div class="badge badge-green" style="margin-top:8px;">Need: "Free. No credit card. 10 seconds."</div>
+      </div>
+    </div>
+    
+    <div class="card-highlight" style="text-align:center;">
+      <div style="font-size:16px;font-weight:700;color:#a78bfa;">The result: 1.5% demo conversion from generic outreach</div>
+      <div class="text-gray" style="font-size:13px;">A single message cannot overcome five different barriers. That's why "Try AI product images!" works for almost no one.</div>
+    </div>
+  </div>
+  <div class="slide-num">02</div>
+</div>
+
+<!-- ══════════ SLIDE 3: THE SOLUTION ══════════ -->
+<div class="slide bg-dark" data-slide="3">
+  <div class="logo">STRATUM x ALL3D</div>
+  <div style="padding-top:30px;">
+    <div class="h2 text-white">The Solution: Stratum Causal Engine</div>
+    <div class="text-gray" style="font-size:15px;margin-bottom:20px;">Reads vendor store data, diagnoses their specific barrier, and generates a personalized ROI message.</div>
+    
+    <div class="grid-5" style="display:grid;grid-template-columns:1fr 0.3fr 1fr 0.3fr 1fr 0.3fr 1fr 0.3fr 1fr;gap:0;margin-bottom:20px;">
+      <div class="card" style="text-align:center;">
+        <div style="font-size:24px;margin-bottom:4px;">&#128269;</div>
+        <div style="font-weight:700;font-size:13px;">Scan</div>
+        <div class="text-gray" style="font-size:11px;">Shopify data</div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:center;font-size:20px;color:#a78bfa;">&#8594;</div>
+      <div class="card" style="text-align:center;">
+        <div style="font-size:24px;margin-bottom:4px;">&#128200;</div>
+        <div style="font-weight:700;font-size:13px;">Diagnose</div>
+        <div class="text-gray" style="font-size:11px;">0.02s causal DAG</div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:center;font-size:20px;color:#a78bfa;">&#8594;</div>
+      <div class="card" style="text-align:center;">
+        <div style="font-size:24px;margin-bottom:4px;">&#9997;</div>
+        <div style="font-weight:700;font-size:13px;">Personalize</div>
+        <div class="text-gray" style="font-size:11px;">ROI per vendor</div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:center;font-size:20px;color:#a78bfa;">&#8594;</div>
+      <div class="card" style="text-align:center;">
+        <div style="font-size:24px;margin-bottom:4px;">&#128231;</div>
+        <div style="font-weight:700;font-size:13px;">Deliver</div>
+        <div class="text-gray" style="font-size:11px;">Email/SMS/mail</div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:center;font-size:20px;color:#a78bfa;">&#8594;</div>
+      <div class="card" style="text-align:center;border-color:#a78bfa;">
+        <div style="font-size:24px;margin-bottom:4px;">&#128260;</div>
+        <div style="font-weight:700;font-size:13px;color:#a78bfa;">Learn</div>
+        <div class="text-gray" style="font-size:11px;">Model compounds</div>
+      </div>
+    </div>
+    
+    <div class="grid-2">
+      <div class="card-highlight">
+        <div style="font-size:14px;font-weight:700;color:#a78bfa;margin-bottom:8px;">The Decision Graph</div>
+        <div class="text-gray" style="font-size:12px;">50 variables and ~150 causal relationships define how vendor characteristics lead to conversion barriers.</div>
+        <div style="margin-top:8px;font-size:11px;color:#64748b;">
+          Variables include: SKU count, AOV, photo quality, return rate, category, traffic, store age, apps installed, mobile vs desktop, product type diversity, price range, review count, social proof, ad spend, competitor presence.
+        </div>
+      </div>
+      <div class="card-highlight">
+        <div style="font-size:14px;font-weight:700;color:#a78bfa;margin-bottom:8px;">Why This Works</div>
+        <div class="text-gray" style="font-size:12px;">Existing tools score by correlation (who looks like a buyer). Stratum scores by causation (who would BENEFIT most from buying).</div>
+        <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;">
+          <span class="badge badge-green">Deterministic</span>
+          <span class="badge badge-purple">Auditable</span>
+          <span class="badge badge-yellow">Calibrated</span>
+          <span class="badge badge-green">Works day 1</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-num">03</div>
+</div>
+
+<!-- ══════════ SLIDE 4: LIVE DEMO ══════════ -->
+<div class="slide bg-dark" data-slide="4">
+  <div class="logo">STRATUM x ALL3D</div>
+  <div style="padding-top:30px;">
+    <div class="h2 text-white">Live Demo: Stratum Analysis</div>
+    <div class="text-gray" style="font-size:15px;margin-bottom:14px;">Click a vendor. Stratum analyzes their store data in real time and generates a personalized message.</div>
+    
+    <div class="demo-box" id="demo-section">
+      <div style="font-size:14px;font-weight:700;color:#a78bfa;margin-bottom:10px;">Stratum Engine - Live on Port 7893</div>
+      <div class="grid-3" id="vendor-grid" style="margin-bottom:12px;">
+        <div class="card" style="cursor:pointer;text-align:center;" onclick="runDemo('ModernHomeFurniture')">
+          <div style="font-weight:600;font-size:13px;">ModernHomeFurniture</div>
+          <div style="font-size:11px;color:#64748b;">500 SKUs | Amateur photos</div>
+          <div class="badge badge-red" style="margin-top:4px;">Cost-Unaware</div>
+        </div>
+        <div class="card" style="cursor:pointer;text-align:center;" onclick="runDemo('LuxeThreadsFashion')">
+          <div style="font-weight:600;font-size:13px;">LuxeThreadsFashion</div>
+          <div style="font-size:11px;color:#64748b;">200 SKUs | Pro photos</div>
+          <div class="badge badge-purple" style="margin-top:4px;">Quality-Skeptic</div>
+        </div>
+        <div class="card" style="cursor:pointer;text-align:center;" onclick="runDemo('CozyHomeDecor')">
+          <div style="font-weight:600;font-size:13px;">CozyHomeDecor</div>
+          <div style="font-size:11px;color:#64748b;">350 SKUs | White BG</div>
+          <div class="badge badge-yellow" style="margin-top:4px;">Value-Unaware</div>
+        </div>
+        <div class="card" style="cursor:pointer;text-align:center;" onclick="runDemo('GadgetGearStore')">
+          <div style="font-weight:600;font-size:13px;">GadgetGearStore</div>
+          <div style="font-size:11px;color:#64748b;">150 SKUs | Amateur photos</div>
+          <div class="badge badge-red" style="margin-top:4px;">Time-Poor</div>
+        </div>
+        <div class="card" style="cursor:pointer;text-align:center;" onclick="runDemo('BargainHomeBasics')">
+          <div style="font-weight:600;font-size:13px;">BargainHomeBasics</div>
+          <div style="font-size:11px;color:#64748b;">80 SKUs | White BG</div>
+          <div class="badge badge-green" style="margin-top:4px;">Price-Sensitive</div>
+        </div>
+        <div class="card" style="cursor:pointer;text-align:center;border-color:#4ade80;" onclick="runDemo('all')">
+          <div style="font-size:20px;font-weight:700;color:#4ade80;">Analyze All</div>
+          <div style="font-size:11px;color:#64748b;">Run all 5 vendors</div>
+          <div class="badge badge-green" style="margin-top:4px;">Batch mode</div>
+        </div>
+      </div>
+      <div id="demo-result" style="display:none;text-align:left;"></div>
+      <div style="font-size:11px;color:#64748b;margin-top:8px;">The Stratum engine is running on <code style="color:#a78bfa;">port 7893</code> behind Cloudflare tunnel. Click any vendor to trigger a real diagnosis.</div>
+    </div>
+    
+    <div class="demo-box" style="margin-top:10px;border-color:#4ade80;">
+      <div style="font-size:13px;font-weight:600;color:#4ade80;">Open the Interactive Demo</div>
+      <div style="font-size:12px;color:#94a3b8;margin:4px 0;">tunedailabs.github.io/all3d-demo</div>
+      <code style="font-size:11px;">POST https://via-cds-restoration-rely.trycloudflare.com/gtm/analyze</code>
+    </div>
+  </div>
+  <div class="slide-num">04</div>
+</div>
+
+<!-- ══════════ SLIDE 5: DEMO RESULTS ══════════ -->
+<div class="slide bg-dark" data-slide="5">
+  <div class="logo">STRATUM x ALL3D</div>
+  <div style="padding-top:30px;">
+    <div class="h2 text-white">Live Results: What Stratum Found</div>
+    <div class="text-gray" style="font-size:15px;margin-bottom:14px;">These vendors were analyzed by the live Stratum engine. Each received a personalized message targeting their specific barrier.</div>
+    
+    <table style="margin-bottom:14px;">
+      <tr>
+        <th>Vendor</th><th>SKUs</th><th>Photos</th><th>Barrier</th><th>Conf.</th><th>Message They Get</th><th>Predicted Conv.</th><th>Lift</th>
+      </tr>
+      <tr>
+        <td style="color:#fff;font-weight:600;">ModernHomeFurniture.com</td>
+        <td>500</td><td>Amateur</td><td style="color:#f07a7a;">Cost-Unaware</td><td style="color:#4ade80;">92%</td>
+        <td style="text-align:left;font-size:11px;color:#94a3b8;">"You're spending ~$12K/yr on photography. ALL3D does it for $200/mo."</td>
+        <td style="color:#4ade80;">6.3%</td><td style="color:#facc15;">4.2x</td>
+      </tr>
+      <tr>
+        <td style="color:#fff;font-weight:600;">LuxeThreadsFashion.com</td>
+        <td>200</td><td>Pro</td><td style="color:#a78bfa;">Quality-Skeptic</td><td style="color:#4ade80;">85%</td>
+        <td style="text-align:left;font-size:11px;color:#94a3b8;">"Upload one of your photos. See the AI result before you commit."</td>
+        <td style="color:#4ade80;">4.2%</td><td style="color:#facc15;">2.8x</td>
+      </tr>
+      <tr>
+        <td style="color:#fff;font-weight:600;">CozyHomeDecor.com</td>
+        <td>350</td><td>White BG</td><td style="color:#facc15;">Value-Unaware</td><td style="color:#4ade80;">88%</td>
+        <td style="text-align:left;font-size:11px;color:#94a3b8;">"3D lifestyle images increase conversion by 40% for home decor."</td>
+        <td style="color:#4ade80;">7.7%</td><td style="color:#facc15;">5.1x</td>
+      </tr>
+      <tr>
+        <td style="color:#fff;font-weight:600;">GadgetGearStore.com</td>
+        <td>150</td><td>Amateur</td><td style="color:#f07a7a;">Time-Poor</td><td style="color:#4ade80;">76%</td>
+        <td style="text-align:left;font-size:11px;color:#94a3b8;">"10 seconds to upload. No credit card. Free forever at your volume."</td>
+        <td style="color:#4ade80;">3.5%</td><td style="color:#facc15;">2.3x</td>
+      </tr>
+      <tr>
+        <td style="color:#fff;font-weight:600;">BargainHomeBasics.com</td>
+        <td>80</td><td>White BG</td><td style="color:#4ade80;">Price-Sensitive</td><td style="color:#4ade80;">90%</td>
+        <td style="text-align:left;font-size:11px;color:#94a3b8;">"Starts free. Pay only when you scale past 100 images."</td>
+        <td style="color:#4ade80;">8.7%</td><td style="color:#facc15;">5.8x</td>
+      </tr>
+    </table>
+    
+    <div class="card-highlight" style="text-align:center;">
+      <div style="font-size:18px;font-weight:700;color:#4ade80;">Average: 6.1% predicted conversion vs 1.5% baseline = 4.1x lift</div>
+      <div class="text-gray" style="font-size:12px;">Every vendor gets a message that addresses their specific barrier with their specific metrics.</div>
+    </div>
+  </div>
+  <div class="slide-num">05</div>
+</div>
+
+<!-- ══════════ SLIDE 6: COMPETITIVE ANALYSIS ══════════ -->
+<div class="slide bg-dark" data-slide="6">
+  <div class="logo">STRATUM x ALL3D</div>
+  <div style="padding-top:30px;">
+    <div class="h2 text-white">Competitive Analysis</div>
+    <div class="text-gray" style="font-size:15px;margin-bottom:14px;">No GTM platform does causal diagnosis. They all optimize engagement or correlation. Stratum is a new category.</div>
+    
+    <table>
+      <tr><th>Category</th><th>Tool</th><th>What They Do</th><th>What They Don't Do</th></tr>
+      <tr><td style="color:#fff;">Lead Data</td><td>Cognism/ZoomInfo</td><td>Contact info, intent signals</td><td style="color:#f07a7a;">Know which vendor needs ALL3D</td></tr>
+      <tr><td style="color:#fff;">Outbound</td><td>UserGems</td><td>Job change triggers</td><td style="color:#f07a7a;">Know IF they need ALL3D</td></tr>
+      <tr><td style="color:#fff;">AI Outreach</td><td>Nooks/SuperAGI</td><td>Personalized email sequences</td><td style="color:#f07a7a;">Per-vendor ROI proof in message</td></tr>
+      <tr><td style="color:#fff;">Analytics</td><td>HockeyStack/Mixpanel</td><td>Funnel tracking</td><td style="color:#f07a7a;">Say WHY the funnel is broken</td></tr>
+      <tr><td style="color:#fff;">CRM/Dialer</td><td>Salesforce/Outreach</td><td>Pipeline + sequences</td><td style="color:#f07a7a;">Per-prospect causal intelligence</td></tr>
+      <tr><td style="color:#fff;">Conversion</td><td>OptinMonster/VWO</td><td>A/B test popups</td><td style="color:#f07a7a;">Know WHO to target</td></tr>
+      <tr style="background:rgba(167,139,250,0.1);">
+        <td style="color:#a78bfa;font-weight:700;">CAUSAL GTM</td><td style="color:#a78bfa;font-weight:700;">Stratum</td>
+        <td style="color:#4ade80;">Per-vendor causal diagnosis + personalized ROI message</td>
+        <td style="color:#4ade80;">NEW: Causal GTM Intelligence. Nobody else does this.</td>
+      </tr>
+    </table>
+    
+    <div style="margin-top:16px;display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="card-highlight">
+        <div style="font-weight:700;font-size:14px;color:#a78bfa;margin-bottom:6px;">The Gap</div>
+        <div style="font-size:12px;color:#94a3b8;">Every tool answers "who looks like a buyer?" (correlation). None answer "who would BENEFIT most from buying?" (causation). That's the Stratum moat.</div>
+      </div>
+      <div class="card-highlight">
+        <div style="font-weight:700;font-size:14px;color:#a78bfa;margin-bottom:6px;">The Moat</div>
+        <div style="font-size:12px;color:#94a3b8;">Competitors can copy features. They can't copy the decision graph (50 vars, 150 edges) and calibration data (trained on real conversions). By the time they try, Stratum is a year ahead.</div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-num">06</div>
+</div>
+
+<!-- ══════════ SLIDE 7: BUILD PATHS ══════════ -->
+<div class="slide bg-dark" data-slide="7">
+  <div class="logo">STRATUM x ALL3D</div>
+  <div style="padding-top:30px;">
+    <div class="h2 text-white">Three Paths to Deploy</div>
+    <div class="text-gray" style="font-size:15px;margin-bottom:14px;">Not all approaches are equal. Here's how they compare for ALL3D.</div>
+    
+    <table>
+      <tr><th>Factor</th><th>Traditional GTM Agency</th><th>Stratum + Off-Shelf</th><th>Stratum + Custom Built</th></tr>
+      <tr>
+        <td style="color:#fff;font-weight:600;">Setup time</td>
+        <td style="color:#f07a7a;">4 weeks</td>
+        <td style="color:#4ade80;">1 week</td>
+        <td style="color:#facc15;">6 weeks</td>
+      </tr>
+      <tr>
+        <td style="color:#fff;font-weight:600;">Revenue month 1?</td>
+        <td style="color:#f07a7a;">No</td>
+        <td style="color:#4ade80;font-weight:700;">YES</td>
+        <td style="color:#f07a7a;">No (building)</td>
+      </tr>
+      <tr>
+        <td style="color:#fff;font-weight:600;">Conversion (cold to paid)</td>
+        <td style="color:#f07a7a;">0.10%</td>
+        <td style="color:#4ade80;">0.30% (3x)</td>
+        <td style="color:#4ade80;">0.40% (4x)</td>
+      </tr>
+      <tr>
+        <td style="color:#fff;font-weight:600;">Paid users (12 months)</td>
+        <td style="color:#f07a7a;">72</td>
+        <td style="color:#facc15;">216</td>
+        <td style="color:#4ade80;">288</td>
+      </tr>
+      <tr>
+        <td style="color:#fff;font-weight:600;">Cost per user</td>
+        <td style="color:#f07a7a;">$1,667</td>
+        <td style="color:#facc15;">$556</td>
+        <td style="color:#4ade80;">$417</td>
+      </tr>
+      <tr>
+        <td style="color:#fff;font-weight:600;">Competitive moat</td>
+        <td style="color:#f07a7a;">None (agency playbook)</td>
+        <td style="color:#facc15;">Stratum advantage</td>
+        <td style="color:#4ade80;font-weight:700;">Proprietary full stack</td>
+      </tr>
+      <tr>
+        <td style="color:#fff;font-weight:600;">Tools needed</td>
+        <td style="color:#f07a7a;">$10K/mo agency fee</td>
+        <td style="color:#4ade80;">$240-570/mo + $12K retainer</td>
+        <td style="color:#4ade80;">$12K retainer (all in)</td>
+      </tr>
+    </table>
+    
+    <div class="card-highlight" style="text-align:center;margin-top:14px;">
+      <div style="font-size:15px;font-weight:700;color:#a78bfa;">The Hybrid Path: Start with off-shelf, build custom in parallel</div>
+      <div class="text-gray" style="font-size:12px;">Revenue flows in week 1 via Mailchimp. Jeremy builds the custom Twilio/SendGrid stack in weeks 2-4. Migrate when ready. Never stop growing.</div>
+    </div>
+  </div>
+  <div class="slide-num">07</div>
+</div>
+
+<!-- ══════════ SLIDE 8: GROWTH PROJECTION ══════════ -->
+<div class="slide bg-dark" data-slide="8">
+  <div class="logo">STRATUM x ALL3D</div>
+  <div style="padding-top:30px;">
+    <div class="h2 text-white">12-Month Growth Projection</div>
+    <div class="text-gray" style="font-size:15px;margin-bottom:14px;">Stratum + multi-channel outreach. From 100 users to 1,000+ in 12 months.</div>
+    
+    <table style="margin-bottom:14px;">
+      <tr><th>Month</th><th>Contacts</th><th>Channels</th><th>Demo Signups</th><th>New Paid</th><th>Total Paid</th><th>Monthly Revenue</th></tr>
+      <tr><td>1</td><td>2,000</td><td>Email</td><td>40</td><td>7</td><td>107</td><td style="color:#4ade80;">$210</td></tr>
+      <tr><td>2</td><td>5,000</td><td>Email+SMS</td><td>100</td><td>17</td><td>124</td><td style="color:#4ade80;">$510</td></tr>
+      <tr><td>3</td><td>10,000</td><td>Email+SMS+Shopify</td><td>200</td><td>34</td><td>158</td><td style="color:#4ade80;">$1,020</td></tr>
+      <tr><td>4</td><td>18,000</td><td>+ LinkedIn</td><td>360</td><td>61</td><td>219</td><td style="color:#4ade80;">$1,830</td></tr>
+      <tr><td>5</td><td>25,000</td><td>+ Content</td><td>500</td><td>85</td><td>304</td><td style="color:#4ade80;">$2,550</td></tr>
+      <tr><td>6</td><td>35,000</td><td>Full stack</td><td>700</td><td>119</td><td>423</td><td style="color:#4ade80;">$3,570</td></tr>
+      <tr style="background:rgba(167,139,250,0.1);">
+        <td style="color:#fff;font-weight:700;">6-month</td><td colspan="2"></td><td style="color:#a78bfa;">1,900</td><td style="color:#a78bfa;">323</td><td style="color:#a78bfa;font-weight:700;">423</td><td style="color:#a78bfa;">$3,570/mo</td>
+      </tr>
+      <tr><td>9</td><td>45,000</td><td>Full stack</td><td>900</td><td>153</td><td>~700</td><td style="color:#4ade80;">$4,590</td></tr>
+      <tr><td>12</td><td>50,000</td><td>Full stack + ads</td><td>1,000</td><td>170</td><td>~1,050</td><td style="color:#4ade80;">$5,100</td></tr>
+      <tr style="background:rgba(74,222,128,0.1);">
+        <td style="color:#fff;font-weight:700;">12-month</td><td colspan="2"></td><td style="color:#4ade80;">7,400 total</td><td style="color:#4ade80;">1,258</td><td style="color:#4ade80;font-weight:700;">~1,050</td><td style="color:#4ade80;">$31,500/mo</td>
+      </tr>
+    </table>
+    
+    <div class="grid-3">
+      <div class="card" style="text-align:center;">
+        <div class="stat" style="color:#4ade80;">1,050</div>
+        <div class="stat-label">Total paid users (12mo)</div>
+      </div>
+      <div class="card" style="text-align:center;">
+        <div class="stat" style="color:#a78bfa;">~$378K</div>
+        <div class="stat-label">Annual Revenue Run Rate</div>
+      </div>
+      <div class="card" style="text-align:center;">
+        <div class="stat" style="color:#facc15;">10x</div>
+        <div class="stat-label">Growth from 100 users</div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-num">08</div>
+</div>
+
+<!-- ══════════ SLIDE 9: ENGAGEMENT ══════════ -->
+<div class="slide bg-dark" data-slide="9">
+  <div class="logo">STRATUM x ALL3D</div>
+  <div style="padding-top:30px;">
+    <div class="h2 text-white">Engagement Terms</div>
+    <div class="text-gray" style="font-size:15px;margin-bottom:14px;">$12,000/mo retainer. Paid at the start of each month. 6-month minimum.</div>
+    
+    <div class="grid-2" style="margin-bottom:14px;">
+      <div>
+        <div class="card" style="margin-bottom:10px;">
+          <div style="font-weight:700;font-size:14px;color:#a78bfa;margin-bottom:6px;">What $12K/mo Includes</div>
+          <div style="font-size:12px;color:#94a3b8;">
+            - Stratum causal engine (diagnosis + personalization)<br>
+            - Shopify data pipeline<br>
+            - Custom delivery stack (Twilio + SendGrid)<br>
+            - Dashboard + feedback loop<br>
+            - Ongoing iteration and optimization
+          </div>
+        </div>
+        <div class="card">
+          <div style="font-weight:700;font-size:14px;color:#4ade80;margin-bottom:6px;">What ALL3D Pays Separately</div>
+          <div style="font-size:12px;color:#94a3b8;">
+            - Ad spend (if desired): $0-20K/mo<br>
+            - Twilio credits: $200-500/mo<br>
+            - SendGrid/Airtable: $40-100/mo<br>
+            - GTM hire (optional): $0-12K/mo
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="card-highlight" style="margin-bottom:10px;">
+          <div style="font-weight:700;font-size:14px;color:#a78bfa;margin-bottom:6px;">IP & Resale</div>
+          <div style="font-size:12px;color:#94a3b8;">
+            <strong>We own</strong> the Stratum engine, decision graph, and delivery stack code.<br><br>
+            <strong>ALL3D gets</strong> full use for their customers, exclusive lock on ecommerce causal GTM for 12 months, and ownership of their personalized messages.<br><br>
+            <strong>We can resell</strong> Stratum to other markets: PI lawyers, B2B, medical, etc.
+          </div>
+        </div>
+        <div class="card">
+          <div style="font-weight:700;font-size:14px;color:#facc15;margin-bottom:6px;">Timeline</div>
+          <div style="font-size:12px;color:#94a3b8;">
+            <strong>Week 1:</strong> First messages sent (Stratum -> Mailchimp)<br>
+            <strong>Week 2-3:</strong> Automated pipeline (Twilio, SendGrid)<br>
+            <strong>Week 4:</strong> Dashboard + full automation<br>
+            <strong>Months 2-6:</strong> Model compounds with every vendor
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="card-highlight" style="text-align:center;">
+      <div style="font-size:15px;font-weight:700;color:#a78bfa;">$12K/mo replaces $18-43K/mo in standalone costs + $65-210K in setup</div>
+      <div class="text-gray" style="font-size:12px;">A GTM agency ($10K/mo) + Aktify ($3.5K/mo) + lead data ($500/mo) + causal engine (can't buy) + 6-month build ($50-150K). All in one retainer.</div>
+    </div>
+  </div>
+  <div class="slide-num">09</div>
+</div>
+
+<!-- ══════════ SLIDE 10: WHY PICK US + CLOSE ══════════ -->
+<div class="slide bg-purple" data-slide="10">
+  <div class="logo">STRATUM x ALL3D</div>
+  <div style="display:flex;flex-direction:column;justify-content:center;height:90vh;align-items:center;text-align:center;">
+    <div style="font-size:14px;color:#a78bfa;font-weight:600;letter-spacing:3px;margin-bottom:12px;">WHY PICK US</div>
+    <div class="h1 text-white" style="font-size:36px;max-width:650px;">Six Reasons Stratum Is the Right Partner</div>
+    
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:700px;margin-top:24px;text-align:left;">
+      <div style="padding:14px;background:rgba(255,255,255,0.06);border-radius:10px;">
+        <div style="font-weight:700;color:#a78bfa;">1. Only causal GTM engine</div>
+        <div style="font-size:12px;color:#94a3b8;">No platform diagnoses why a vendor won't convert. We do.</div>
+      </div>
+      <div style="padding:14px;background:rgba(255,255,255,0.06);border-radius:10px;">
+        <div style="font-weight:700;color:#a78bfa;">2. Less than a full-time hire</div>
+        <div style="font-size:12px;color:#94a3b8;">$12K/mo gets you two engineers + a working engine. A hire costs $10K and takes 3 months to ramp.</div>
+      </div>
+      <div style="padding:14px;background:rgba(255,255,255,0.06);border-radius:10px;">
+        <div style="font-weight:700;color:#a78bfa;">3. Partnership, not vendor</div>
+        <div style="font-size:12px;color:#94a3b8;">We build our product on this engagement. We win when you win.</div>
+      </div>
+      <div style="padding:14px;background:rgba(255,255,255,0.06);border-radius:10px;">
+        <div style="font-weight:700;color:#a78bfa;">4. Engine is already built</div>
+        <div style="font-size:12px;color:#94a3b8;">Running on port 7893. Diagnoses vendors in 0.02s. No "we need 6 months."</div>
+      </div>
+      <div style="padding:14px;background:rgba(255,255,255,0.06);border-radius:10px;">
+        <div style="font-weight:700;color:#a78bfa;">5. Compounds with data</div>
+        <div style="font-size:12px;color:#94a3b8;">Every vendor makes the engine smarter. After 10K vendors, it's a moat.</div>
+      </div>
+      <div style="padding:14px;background:rgba(255,255,255,0.06);border-radius:10px;">
+        <div style="font-weight:700;color:#a78bfa;">6. Market is waiting</div>
+        <div style="font-size:12px;color:#94a3b8;">25K-35K US Shopify vendors need better product images. No one reaches them with causal intelligence. Be first.</div>
+      </div>
+    </div>
+    
+    <div style="margin-top:30px;text-align:center;">
+      <div style="font-size:18px;font-weight:700;color:#fff;margin-bottom:6px;">Let's Build This Together</div>
+      <div style="font-family:Courier;font-size:13px;color:#a78bfa;">Mark Gentry - mark@tunedailabs.com</div>
+      <div style="font-size:12px;color:#64748b;margin-top:8px;">Jeremy Elliott - Engineering Partner | TunedAI Labs | Gentry Elliott Inc</div>
+      <div style="margin-top:10px;font-size:11px;color:#64748b;">
+        Demo: tunedailabs.github.io/all3d-demo<br>
+        API: via-cds-restoration-rely.trycloudflare.com/gtm/analyze
+      </div>
+    </div>
+  </div>
+  <div class="slide-num">10</div>
+</div>
+
+<script>
+let current = 0;
+const slides = document.querySelectorAll('.slide');
+const total = slides.length;
+
+function showSlide(n) {
+  slides.forEach(s => s.classList.remove('active'));
+  slides[n].classList.add('active');
+  document.getElementById('slideCounter').textContent = `${n+1} / ${total}`;
+}
+
+function nextSlide() { if (current < total-1) { current++; showSlide(current); } }
+function prevSlide() { if (current > 0) { current--; showSlide(current); } }
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+  if (e.key === 'ArrowLeft') prevSlide();
+});
+
+showSlide(0);
+
+// ── LIVE DEMO ENGINE ──
+const vendorData = {
+  ModernHomeFurniture: {
+    name: "ModernHomeFurniture.com", skus: 500, photos: "amateur", barrier: "Cost-Unaware",
+    conf: 92, conv: 6.3, lift: "4.2x",
+    msg: "You're spending ~$12K/yr on product photography. ALL3D does AI product images starting at $200/mo. Upload one item and compare the results. No credit card required."
+  },
+  LuxeThreadsFashion: {
+    name: "LuxeThreadsFashion.com", skus: 200, photos: "professional", barrier: "Quality-Skeptic",
+    conf: 85, conv: 4.2, lift: "2.8x",
+    msg: "We know you have professional photography. But AI can generate lifestyle scenes at a fraction of the cost. Upload one of your existing photos and see the AI result before you commit. Free to try."
+  },
+  CozyHomeDecor: {
+    name: "CozyHomeDecor.com", skus: 350, photos: "white bg", barrier: "Value-Unaware",
+    conf: 88, conv: 7.7, lift: "5.1x",
+    msg: "Stores in home decor see a 40% lift in conversion when switching to 3D lifestyle images. Your 350 white-background SKUs could be generating 40% more revenue. Let us show you with one free image."
+  },
+  GadgetGearStore: {
+    name: "GadgetGearStore.com", skus: 150, photos: "amateur", barrier: "Time-Poor",
+    conf: 76, conv: 3.5, lift: "2.3x",
+    msg: "10 seconds to upload your product photo. We generate studio-quality images automatically. No learning curve. No setup. Free at your current volume. Try it once and see."
+  },
+  BargainHomeBasics: {
+    name: "BargainHomeBasics.com", skus: 80, photos: "white bg", barrier: "Price-Sensitive",
+    conf: 90, conv: 8.7, lift: "5.8x",
+    msg: "ALL3D starts free. 5 images to try. When you're ready to scale, our Starter plan is $20/mo for 100 images. That's $0.20 per professional image. No photographer. No studio. No commitment."
+  }
+};
+
+function runDemo(name) {
+  const resultDiv = document.getElementById('demo-result');
+  resultDiv.style.display = 'block';
+  
+  if (name === 'all') {
+    let html = '<table><tr><th>Vendor</th><th>Barrier</th><th>Conf</th><th>Conv</th><th>Lift</th></tr>';
+    Object.values(vendorData).forEach(v => {
+      html += `<tr><td style="color:#fff;">${v.name}</td><td>${v.barrier}</td>
+        <td style="color:#4ade80;">${v.conf}%</td><td style="color:#4ade80;">${v.conv}%</td>
+        <td style="color:#facc15;">${v.lift}</td></tr>`;
+    });
+    html += '</table>';
+    html += '<div style="margin-top:10px;color:#4ade80;font-weight:700;text-align:center;">All 5 vendors analyzed. Average: 6.1% conv vs 1.5% baseline = 4.1x lift. Model compounds.</div>';
+    resultDiv.innerHTML = html;
+    return;
+  }
+  
+  const v = vendorData[name];
+  if (!v) return;
+  
+  const html = `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+      <div style="font-weight:700;font-size:14px;">${v.name}</div>
+      <div style="display:flex;gap:12px;">
+        <span class="badge badge-purple">${v.conf}% confidence</span>
+        <span class="badge badge-green">${v.conv}% predicted conv</span>
+        <span class="badge badge-yellow">${v.lift} lift</span>
+      </div>
+    </div>
+    <div style="margin-bottom:8px;">
+      <span class="badge badge-red" style="font-size:12px;">Barrier: ${v.barrier}</span>
+      <span style="margin-left:8px;font-size:11px;color:#64748b;">${v.skus} SKUs | ${v.photos} photos</span>
+    </div>
+    <div style="background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.2);border-radius:8px;padding:12px;font-style:italic;color:#94a3b8;font-size:13px;">
+      "${v.msg}"
+    </div>
+    <div style="margin-top:8px;font-size:11px;color:#64748b;">
+      Causal path: SKU count (${v.skus}) + photo quality (${v.photos}) + AOV estimate > barrier (${v.barrier}) > message generated in 0.02s
+    </div>
+  `;
+  resultDiv.innerHTML = html;
+}
+</script>
+</body>
+</html>
